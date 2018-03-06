@@ -17,7 +17,8 @@
     "react",
     "jsx-a11y",
     "import",
-    "jest"
+    "jest",
+    "prettier"
   ],
   "rules": {
     "no-underscore-dangle": ["error", { "allow": ["_id", "_insertCss", "_getCss"] }],
