@@ -1,0 +1,17 @@
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# documentation
+/public
+
+# misc
+.DS_Store
+*local.js*
+.idea
+npm-debug.log*
