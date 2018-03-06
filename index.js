@@ -1,27 +1,28 @@
-// index.js
-#! /usr/bin/env node
+#!/usr/bin/env node
 const fs = require('fs');
+const chalk = require('chalk');
 const filePath = process.argv[2];
+
 if (!fs.existsSync(filePath)) {
-  console.log('Can not read commit message');
+  console.log('Can\'t read commit message.');
   process.exit(1);
 }
-const message = fs.readFileSync(filePath);
 
-const commandLineArgs = require('command-line-args');
-const optionDefinitions = [
-  {
-    name: 'regexp',
-    alias: 'r',
-    type: String,
-    defaultValue: '^[A-Z]+-[0-9]+\s-\s[\W\w\s]{5,}[\s]*$'
-  }
-];
-const cli = commandLineArgs(optionDefinitions);
+const message = fs.readFileSync(filePath, 'utf8');
+const jira = /((?!([A-Z0-9a-z]{1,10})-?$)[A-Z]{1}[A-Z0-9]+-\d+)/g;
+const russian = /([а-яА-Я]+)/g;
+const short = /^([a-zA-Z0-9_-]){0,15}$/g;
 
-const commonRegexp = new RegExp(cli.regexp, 'ig');
-if (!commonRegexp.test(message)) {
-  console.log("Wrong commit message format");
+
+if (!message.match(jira)) {
+  console.log(chalk.red('Wrong commit message format. Commits without task id are strictly prohibited.'));
   process.exit(3);
+} else if (message.match(russian)) {
+  console.log(chalk.red('Don\'t use russian for commit message.'));
+  process.exit(3);
+} else if (message.match(short)) {
+  console.log(chalk.red('Commit message is too short, try to be more descriptive.'));
+  process.exit(3);
+} else {
+  process.exit(0);
 }
-process.exit(0);
